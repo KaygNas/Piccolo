@@ -11,7 +11,6 @@ then
     exit 1
 fi
 
-
 if test \( \( -n "$1" \) -a \( "$1" = "debug" \) \);then
     CONFIG=" Debug"
 elif test \( \( -n "$1" \) -a \( "$1" = "release" \) \);then
@@ -26,6 +25,6 @@ else
     exit 1
 fi
 
-cmake -S . -B build -G "Xcode"
+cmake -S . -B build -G "Ninja"
 
 cmake --build build --config "${CONFIG}"
