@@ -39,7 +39,8 @@ namespace Piccolo
         _main_camera_subpass_fxaa,
         _main_camera_subpass_ui,
         _main_camera_subpass_combine_ui,
-        _main_camera_subpass_count
+        _main_camera_subpass_count,
+        _main_camera_subpass_vignette, 
     };
 
     struct VisiableNodes
