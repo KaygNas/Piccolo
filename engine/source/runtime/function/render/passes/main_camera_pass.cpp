@@ -2017,6 +2017,10 @@ namespace Piccolo
 
         m_rhi->cmdNextSubpassPFN(m_rhi->getCurrentCommandBuffer(), RHI_SUBPASS_CONTENTS_INLINE);
 
+        vignette_pass.draw();
+
+        m_rhi->cmdNextSubpassPFN(m_rhi->getCurrentCommandBuffer(), RHI_SUBPASS_CONTENTS_INLINE);
+
         if (m_enable_fxaa)
             fxaa_pass.draw();
 
@@ -2104,6 +2108,10 @@ namespace Piccolo
         m_rhi->cmdNextSubpassPFN(m_rhi->getCurrentCommandBuffer(), RHI_SUBPASS_CONTENTS_INLINE);
 
         color_grading_pass.draw();
+
+        m_rhi->cmdNextSubpassPFN(m_rhi->getCurrentCommandBuffer(), RHI_SUBPASS_CONTENTS_INLINE);
+
+        vignette_pass.draw();
 
         m_rhi->cmdNextSubpassPFN(m_rhi->getCurrentCommandBuffer(), RHI_SUBPASS_CONTENTS_INLINE);
 
