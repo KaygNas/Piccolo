@@ -2635,7 +2635,7 @@ namespace Piccolo
         pool_sizes[3].type            = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
         pool_sizes[3].descriptorCount = 3 + 5 * m_max_material_count + 1 + 1; // ImGui_ImplVulkan_CreateDeviceObjects
         pool_sizes[4].type            = VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT;
-        pool_sizes[4].descriptorCount = 4 + 1 + 1 + 2;
+        pool_sizes[4].descriptorCount = 4 + 1 + 1 + 2 + 1; // TODO: need to resize when adding pass
         pool_sizes[5].type            = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC;
         pool_sizes[5].descriptorCount = 3;
         pool_sizes[6].type            = VK_DESCRIPTOR_TYPE_STORAGE_IMAGE;
