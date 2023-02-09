@@ -363,19 +363,19 @@ namespace Piccolo
 
         RHIAttachmentReference vignette_pass_input_attachment_reference {};
         vignette_pass_input_attachment_reference.attachment =
-            &backup_even_color_attachment_description - attachments;
+            &backup_odd_color_attachment_description - attachments;
         vignette_pass_input_attachment_reference.layout = RHI_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
 
         RHIAttachmentReference vignette_pass_color_attachment_reference {};
         if (m_enable_fxaa)
         {
             vignette_pass_color_attachment_reference.attachment =
-                &post_process_odd_color_attachment_description - attachments;
+                &post_process_even_color_attachment_description - attachments;
         }
         else
         {
             vignette_pass_color_attachment_reference.attachment =
-                &backup_odd_color_attachment_description - attachments;
+                &backup_even_color_attachment_description - attachments;
         }
         vignette_pass_color_attachment_reference.layout = RHI_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
 
@@ -397,12 +397,12 @@ namespace Piccolo
         }
         else
         {
-            fxaa_pass_input_attachment_reference.attachment = &backup_even_color_attachment_description - attachments;
+            fxaa_pass_input_attachment_reference.attachment = &backup_odd_color_attachment_description - attachments;
         }
         fxaa_pass_input_attachment_reference.layout = RHI_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
 
         RHIAttachmentReference fxaa_pass_color_attachment_reference {};
-        fxaa_pass_color_attachment_reference.attachment = &backup_odd_color_attachment_description - attachments;
+        fxaa_pass_color_attachment_reference.attachment = &backup_even_color_attachment_description - attachments;
         fxaa_pass_color_attachment_reference.layout     = RHI_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
 
         RHISubpassDescription& fxaa_pass   = subpasses[_main_camera_subpass_fxaa];
@@ -416,10 +416,10 @@ namespace Piccolo
         fxaa_pass.pPreserveAttachments    = NULL;
 
         RHIAttachmentReference ui_pass_color_attachment_reference {};
-        ui_pass_color_attachment_reference.attachment = &backup_even_color_attachment_description - attachments;
+        ui_pass_color_attachment_reference.attachment = &backup_odd_color_attachment_description - attachments;
         ui_pass_color_attachment_reference.layout     = RHI_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
 
-        uint32_t ui_pass_preserve_attachment = &backup_odd_color_attachment_description - attachments;
+        uint32_t ui_pass_preserve_attachment = &backup_even_color_attachment_description - attachments;
 
         RHISubpassDescription& ui_pass  = subpasses[_main_camera_subpass_ui];
         ui_pass.pipelineBindPoint       = RHI_PIPELINE_BIND_POINT_GRAPHICS;
@@ -433,10 +433,10 @@ namespace Piccolo
 
         RHIAttachmentReference combine_ui_pass_input_attachments_reference[2] = {};
         combine_ui_pass_input_attachments_reference[0].attachment =
-            &backup_odd_color_attachment_description - attachments;
+            &backup_even_color_attachment_description - attachments;
         combine_ui_pass_input_attachments_reference[0].layout = RHI_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
         combine_ui_pass_input_attachments_reference[1].attachment =
-            &backup_even_color_attachment_description - attachments;
+            &backup_odd_color_attachment_description - attachments;
         combine_ui_pass_input_attachments_reference[1].layout = RHI_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
 
         RHIAttachmentReference combine_ui_pass_color_attachment_reference {};
@@ -528,7 +528,6 @@ namespace Piccolo
             RHI_ACCESS_SHADER_WRITE_BIT | RHI_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
         vignette_depend_on_color_grading_pass.dstAccessMask =
             RHI_ACCESS_SHADER_READ_BIT | RHI_ACCESS_COLOR_ATTACHMENT_READ_BIT;
-        vignette_depend_on_color_grading_pass.dependencyFlags = RHI_DEPENDENCY_BY_REGION_BIT; // TODO: shall be removed?
 
         RHISubpassDependency& fxaa_pass_depend_on_vignette_pass = dependencies[6];
         fxaa_pass_depend_on_vignette_pass.srcSubpass           = _main_camera_subpass_vignette;
