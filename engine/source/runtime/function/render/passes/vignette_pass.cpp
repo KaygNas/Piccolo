@@ -4,7 +4,7 @@
 #include "runtime/function/render/interface/vulkan/vulkan_util.h"
 
 #include <vignette_frag.h>
-#include <post_process_vert.h>
+#include <vignette_vert.h>
 
 #include <stdexcept>
 
@@ -27,7 +27,7 @@ namespace Piccolo
     {
         m_descriptor_infos.resize(1);
 
-        RHIDescriptorSetLayoutBinding post_process_global_layout_bindings[2] = {};
+        RHIDescriptorSetLayoutBinding post_process_global_layout_bindings[1] = {};
 
         RHIDescriptorSetLayoutBinding& post_process_global_layout_input_attachment_binding =
             post_process_global_layout_bindings[0];
@@ -35,12 +35,6 @@ namespace Piccolo
         post_process_global_layout_input_attachment_binding.descriptorType  = RHI_DESCRIPTOR_TYPE_INPUT_ATTACHMENT;
         post_process_global_layout_input_attachment_binding.descriptorCount = 1;
         post_process_global_layout_input_attachment_binding.stageFlags      = RHI_SHADER_STAGE_FRAGMENT_BIT;
-
-        RHIDescriptorSetLayoutBinding& post_process_global_layout_LUT_binding = post_process_global_layout_bindings[1];
-        post_process_global_layout_LUT_binding.binding                       = 1;
-        post_process_global_layout_LUT_binding.descriptorType  = RHI_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
-        post_process_global_layout_LUT_binding.descriptorCount = 1;
-        post_process_global_layout_LUT_binding.stageFlags      = RHI_SHADER_STAGE_FRAGMENT_BIT;
 
         RHIDescriptorSetLayoutCreateInfo post_process_global_layout_create_info;
         post_process_global_layout_create_info.sType = RHI_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
@@ -71,7 +65,7 @@ namespace Piccolo
             throw std::runtime_error("create post process pipeline layout");
         }
 
-        RHIShader* vert_shader_module = m_rhi->createShaderModule(POST_PROCESS_VERT);
+        RHIShader* vert_shader_module = m_rhi->createShaderModule(VIGNETTE_VERT);
         RHIShader* frag_shader_module = m_rhi->createShaderModule(VIGNETTE_FRAG);
 
         RHIPipelineShaderStageCreateInfo vert_pipeline_shader_stage_create_info {};
@@ -212,13 +206,7 @@ namespace Piccolo
         post_process_per_frame_input_attachment_info.imageView   = input_attachment;
         post_process_per_frame_input_attachment_info.imageLayout = RHI_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
 
-        RHIDescriptorImageInfo vignette_LUT_image_info = {};
-        vignette_LUT_image_info.sampler = m_rhi->getOrCreateDefaultSampler(Default_Sampler_Linear);
-        vignette_LUT_image_info.imageView =
-            m_global_render_resource->_color_grading_resource._color_grading_LUT_texture_image_view;
-        vignette_LUT_image_info.imageLayout = RHI_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
-
-        RHIWriteDescriptorSet post_process_descriptor_writes_info[2];
+        RHIWriteDescriptorSet post_process_descriptor_writes_info[1];
 
         RHIWriteDescriptorSet& post_process_descriptor_input_attachment_write_info =
             post_process_descriptor_writes_info[0];
@@ -230,16 +218,6 @@ namespace Piccolo
         post_process_descriptor_input_attachment_write_info.descriptorType  = RHI_DESCRIPTOR_TYPE_INPUT_ATTACHMENT;
         post_process_descriptor_input_attachment_write_info.descriptorCount = 1;
         post_process_descriptor_input_attachment_write_info.pImageInfo = &post_process_per_frame_input_attachment_info;
-
-        RHIWriteDescriptorSet& post_process_descriptor_LUT_write_info = post_process_descriptor_writes_info[1];
-        post_process_descriptor_LUT_write_info.sType                 = RHI_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-        post_process_descriptor_LUT_write_info.pNext                 = NULL;
-        post_process_descriptor_LUT_write_info.dstSet                = m_descriptor_infos[0].descriptor_set;
-        post_process_descriptor_LUT_write_info.dstBinding            = 1;
-        post_process_descriptor_LUT_write_info.dstArrayElement       = 0;
-        post_process_descriptor_LUT_write_info.descriptorType        = RHI_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
-        post_process_descriptor_LUT_write_info.descriptorCount       = 1;
-        post_process_descriptor_LUT_write_info.pImageInfo            = &vignette_LUT_image_info;
 
         m_rhi->updateDescriptorSets(sizeof(post_process_descriptor_writes_info) /
                                     sizeof(post_process_descriptor_writes_info[0]),
