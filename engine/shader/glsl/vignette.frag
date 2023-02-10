@@ -11,6 +11,6 @@ layout(location = 0) out highp vec4 out_color;
 void main() {
     highp vec4 color = subpassLoad(in_color).rgba; // sRGB Space, each component in [0.0, 1.0]
     highp float len = length(in_uv - 0.5f);  // 距离点 (0.5, 0.5) 的距离
-    highp float ratio = log2(len + 1.0f) * 2.0f;
-    out_color = color * ratio;
+    highp float ratio = log2(len + 1.0f) * 4.0f;
+    out_color = color * max(ratio, 1.0f);
 }
