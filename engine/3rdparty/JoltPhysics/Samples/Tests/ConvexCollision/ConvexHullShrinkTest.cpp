@@ -106,7 +106,7 @@ void ConvexHullShrinkTest::Initialize()
 					points_stream.read((char *)&v, sizeof(v));
 					p.push_back(Vec3(v));
 				}
-				mPoints.push_back(move(p));
+				mPoints.push_back(std::move(p));
 			}
 		}
 	}

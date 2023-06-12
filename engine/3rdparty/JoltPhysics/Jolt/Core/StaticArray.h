@@ -64,7 +64,7 @@ public:
 	void				emplace_back(A &&... inElement)
 	{	
 		JPH_ASSERT(mSize < N);
-		new (&mElements[mSize++]) T(forward<A>(inElement)...);
+		new (&mElements[mSize++]) T(std::forward<A>(inElement)...);
 	}
 
 	/// Remove element from the back of the array
